@@ -28,10 +28,14 @@ Der Teil zwischen den zwei `---` Linien sind die Infos zum Eintrag:
 |---|---|
 | `title:` | Die Überschrift, in Anführungszeichen |
 | `ort:` | Wo du warst. Steht dann auf der Karte |
-| `lat:` und `lon:` | Die Koordinaten vom Ort (siehe unten). Darfst du auch weglassen, dann kommt der Ort nicht auf die Karte |
+| `koordinaten:` | Wo genau der Ort ist, zum Beispiel `41.3874, 2.1686` (siehe unten). Darfst du auch weglassen, dann kommt der Ort nicht auf die Karte |
 | `laune:` | Wie war der Tag? Zum Beispiel `8 von 10` |
 
-**Koordinaten finden:** In Google Maps mit der rechten Maustaste (am Handy: lange drücken) auf den Ort tippen. Oben erscheinen zwei Zahlen, zum Beispiel `41.3874, 2.1686`. Die erste kommt zu `lat:`, die zweite zu `lon:`.
+**Koordinaten finden:** In Google Maps mit der rechten Maustaste (am Handy: lange drücken) auf den Ort tippen. Oben erscheinen zwei Zahlen, zum Beispiel `41.3874, 2.1686`. Anklicken kopiert sie. Dann einfach hinter `koordinaten:` einfügen:
+
+`koordinaten: 41.3874, 2.1686`
+
+Wichtig: Die beiden Zahlen müssen mit einem Komma getrennt sein, und in den Zahlen selbst steht ein Punkt, kein Komma.
 
 ## 3. Fotos hochladen
 
@@ -41,6 +45,8 @@ Der Teil zwischen den zwei `---` Linien sind die Infos zum Eintrag:
 4. Im Eintrag schreibst du dann an die Stelle, wo das Foto hin soll:
 
    `![Das ist die Bildunterschrift](bilder/name-vom-foto.jpg)`
+
+**Tagebuchseiten:** Hast du eine Seite aus deinem Heft fotografiert, muss im Dateinamen das Wort `seite` vorkommen, zum Beispiel `tag3-seite.jpg`. Dann wird sie gross angezeigt, damit man deine Schrift lesen kann. Alle anderen Fotos werden kleine Sofortbilder.
 
 **Achtung:**
 - Der Name muss genau stimmen, auch Gross- und Kleinschreibung. `Strand.JPG` ist nicht dasselbe wie `strand.jpg`.

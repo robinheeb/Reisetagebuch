@@ -1,8 +1,7 @@
 ---
 title: "Hier kommt die Überschrift hin"
 ort: Name vom Ort
-lat: 46.9480
-lon: 7.4474
+koordinaten: 46.9480, 7.4474
 laune: 7 von 10
 ---
 Hier schreibst du, was heute passiert ist. Einfach drauflos!

@@ -1,0 +1,121 @@
+/* Style fürs Reisetagebuch
+   Farben und Schriften änderst du ganz oben bei :root */
+
+:root {
+  --papier: #fbfcf7;
+  --karo: #d7e3ef;
+  --tinte: #1f2430;
+  --bleistift: #5a6272;
+  --kuli: #2856b8;
+  --leuchtstift: #ffe45c;
+  --rot: #d2453c;
+  --titel: "Rock Salt", "Comic Sans MS", cursive;
+  --schrift: "Patrick Hand", "Comic Sans MS", "Chalkboard SE", cursive;
+  color-scheme: light;
+}
+* { box-sizing: border-box; }
+html { scroll-behavior: smooth; }
+body {
+  margin: 0;
+  background-color: var(--papier);
+  background-image:
+    linear-gradient(var(--karo) 1px, transparent 1px),
+    linear-gradient(90deg, var(--karo) 1px, transparent 1px);
+  background-size: 22px 22px;
+  color: var(--tinte);
+  font-family: var(--schrift);
+  font-size: 1.3rem;
+  line-height: 1.5;
+}
+/* roter Heftrand links */
+body::before {
+  content: ""; position: fixed; top: 0; bottom: 0; left: 46px; width: 2px;
+  background: var(--rot); opacity: .35; pointer-events: none;
+}
+@media (max-width: 760px) { body::before { display: none; } }
+
+.heft {
+  max-width: 720px; margin: 0 auto;
+  padding: 34px 18px 70px;
+  display: flex; flex-direction: column; gap: 40px;
+}
+
+/* Kopf */
+header h1 {
+  font-family: var(--titel); font-weight: 400;
+  font-size: clamp(1.8rem, 6.5vw, 2.8rem); line-height: 1.35;
+  margin: 0; transform: rotate(-1.5deg); text-wrap: balance;
+}
+header h1 span { background: var(--leuchtstift); padding: 0 8px; box-decoration-break: clone; -webkit-box-decoration-break: clone; }
+header p { margin: 12px 0 0; color: var(--bleistift); }
+
+/* Inhaltsverzeichnis */
+.inhalt { display: flex; flex-wrap: wrap; gap: 8px 10px; margin: 0; padding: 0; list-style: none; font-size: 1.1rem; }
+.inhalt a {
+  display: inline-block; color: var(--kuli); text-decoration: none;
+  border: 2px solid var(--kuli); border-radius: 12px 16px 10px 14px; padding: 1px 10px;
+  background: var(--papier);
+}
+.inhalt a:hover, .inhalt a:focus-visible { background: var(--leuchtstift); outline: none; }
+
+/* Karte */
+.karte-box {
+  border: 3px solid var(--tinte); border-radius: 14px 8px 16px 10px;
+  background: var(--papier); padding: 10px; transform: rotate(.5deg);
+  box-shadow: 5px 5px 0 var(--tinte);
+}
+.karte-box h2, .eintrag h2 { font-family: var(--titel); font-weight: 400; margin: 0; }
+.karte-box h2 { font-size: 1.15rem; margin-bottom: 8px; }
+#karte { height: 340px; border-radius: 8px; border: 2px solid var(--tinte); }
+#karte .leaflet-tile-pane { filter: grayscale(.6) sepia(.25) contrast(1.05); }
+.ortsname {
+  background: var(--papier); border: 2px solid var(--tinte); border-radius: 10px;
+  font-family: var(--schrift); font-size: 15px; padding: 0 6px; box-shadow: none;
+}
+.ortsname::before { display: none; }
+.zahlen { display: flex; flex-wrap: wrap; gap: 4px 20px; margin-top: 8px; color: var(--bleistift); font-size: 1.1rem; }
+.zahlen b { color: var(--tinte); font-variant-numeric: tabular-nums; }
+
+/* Einträge */
+.eintraege { display: flex; flex-direction: column; gap: 56px; }
+.eintrag { display: flex; flex-direction: column; gap: 10px; scroll-margin-top: 20px; }
+.eintrag:nth-child(even) { transform: rotate(-.4deg); }
+.kopfzeile { display: flex; flex-wrap: wrap; align-items: center; gap: 6px 14px; }
+.datum { color: var(--kuli); font-size: 1.05rem; }
+.ort {
+  border: 2px solid var(--tinte); border-radius: 50% 46% 52% 44%;
+  padding: 0 12px; font-size: 1rem; transform: rotate(-3deg); background: var(--papier);
+}
+.eintrag h2 { font-size: clamp(1.25rem, 4.5vw, 1.6rem); line-height: 1.4; text-wrap: balance; }
+.text p { margin: 0 0 .7em; max-width: 62ch; }
+.text p:last-child { margin-bottom: 0; }
+.text a { color: var(--kuli); }
+.text strong { background: var(--leuchtstift); font-weight: 400; padding: 0 3px; }
+.text ul { padding-left: 1.2em; margin: 0 0 .7em; }
+
+/* Fotos als eingeklebte Sofortbilder */
+.foto {
+  display: inline-block; margin: 14px 4px 18px; padding: 10px 10px 6px;
+  background: #fff; border: 2px solid var(--tinte); box-shadow: 4px 4px 0 var(--tinte);
+  max-width: min(100%, 440px); position: relative;
+}
+.foto:nth-of-type(odd) { transform: rotate(1.8deg); }
+.foto:nth-of-type(even) { transform: rotate(-1.6deg); }
+.foto::before { /* Klebeband */
+  content: ""; position: absolute; top: -12px; left: 50%; width: 90px; height: 24px;
+  transform: translateX(-50%) rotate(-4deg); background: rgba(255, 228, 92, .7);
+}
+.foto img { display: block; max-width: 100%; height: auto; }
+.foto figcaption { text-align: center; font-size: 1.05rem; padding-top: 6px; }
+/* Fotografierte Tagebuchseiten: Dateiname enthält "seite" -> volle Breite */
+.foto:has(img[src*="seite"]) { display: block; max-width: 100%; margin: 14px 0 18px; transform: rotate(-.6deg); }
+
+.laune { align-self: flex-start; color: var(--bleistift); font-size: 1.1rem; }
+.laune b { color: var(--rot); font-weight: 400; }
+
+.leer {
+  border: 2px dashed var(--bleistift); border-radius: 12px; padding: 18px; color: var(--bleistift);
+}
+footer { text-align: center; color: var(--bleistift); font-size: 1.05rem; }
+a:focus-visible { outline: 3px solid var(--kuli); outline-offset: 2px; }
+@media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } }

@@ -1,0 +1,246 @@
+---
+layout: null
+---
+{%- assign monate = "Januar,Februar,März,April,Mai,Juni,Juli,August,September,Oktober,November,Dezember" | split: "," -%}
+{%- assign tage = "Sonntag,Montag,Dienstag,Mittwoch,Donnerstag,Freitag,Samstag" | split: "," -%}
+<!doctype html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>{{ site.title }}</title>
+<meta name="description" content="{{ site.untertitel }}">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Patrick+Hand&family=Rock+Salt&display=swap">
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
+<style>
+/* Ein Schulheft: Karopapier, Kugelschreiber, Leuchtstift, rote Route */
+:root {
+  --papier: #fbfcf7;
+  --karo: #d7e3ef;
+  --tinte: #1f2430;
+  --bleistift: #5a6272;
+  --kuli: #2856b8;
+  --leuchtstift: #ffe45c;
+  --rot: #d2453c;
+  --titel: "Rock Salt", "Comic Sans MS", cursive;
+  --schrift: "Patrick Hand", "Comic Sans MS", "Chalkboard SE", cursive;
+  color-scheme: light;
+}
+* { box-sizing: border-box; }
+html { scroll-behavior: smooth; }
+body {
+  margin: 0;
+  background-color: var(--papier);
+  background-image:
+    linear-gradient(var(--karo) 1px, transparent 1px),
+    linear-gradient(90deg, var(--karo) 1px, transparent 1px);
+  background-size: 22px 22px;
+  color: var(--tinte);
+  font-family: var(--schrift);
+  font-size: 1.3rem;
+  line-height: 1.5;
+}
+/* roter Heftrand links */
+body::before {
+  content: ""; position: fixed; top: 0; bottom: 0; left: 46px; width: 2px;
+  background: var(--rot); opacity: .35; pointer-events: none;
+}
+@media (max-width: 760px) { body::before { display: none; } }
+
+.heft {
+  max-width: 720px; margin: 0 auto;
+  padding: 34px 18px 70px;
+  display: flex; flex-direction: column; gap: 40px;
+}
+
+/* Kopf */
+header h1 {
+  font-family: var(--titel); font-weight: 400;
+  font-size: clamp(1.8rem, 6.5vw, 2.8rem); line-height: 1.35;
+  margin: 0; transform: rotate(-1.5deg); text-wrap: balance;
+}
+header h1 span { background: var(--leuchtstift); padding: 0 8px; box-decoration-break: clone; -webkit-box-decoration-break: clone; }
+header p { margin: 12px 0 0; color: var(--bleistift); }
+
+/* Inhaltsverzeichnis */
+.inhalt { display: flex; flex-wrap: wrap; gap: 8px 10px; margin: 0; padding: 0; list-style: none; font-size: 1.1rem; }
+.inhalt a {
+  display: inline-block; color: var(--kuli); text-decoration: none;
+  border: 2px solid var(--kuli); border-radius: 12px 16px 10px 14px; padding: 1px 10px;
+  background: var(--papier);
+}
+.inhalt a:hover, .inhalt a:focus-visible { background: var(--leuchtstift); outline: none; }
+
+/* Karte */
+.karte-box {
+  border: 3px solid var(--tinte); border-radius: 14px 8px 16px 10px;
+  background: var(--papier); padding: 10px; transform: rotate(.5deg);
+  box-shadow: 5px 5px 0 var(--tinte);
+}
+.karte-box h2, .eintrag h2 { font-family: var(--titel); font-weight: 400; margin: 0; }
+.karte-box h2 { font-size: 1.15rem; margin-bottom: 8px; }
+#karte { height: 340px; border-radius: 8px; border: 2px solid var(--tinte); }
+#karte .leaflet-tile-pane { filter: grayscale(.6) sepia(.25) contrast(1.05); }
+.ortsname {
+  background: var(--papier); border: 2px solid var(--tinte); border-radius: 10px;
+  font-family: var(--schrift); font-size: 15px; padding: 0 6px; box-shadow: none;
+}
+.ortsname::before { display: none; }
+.zahlen { display: flex; flex-wrap: wrap; gap: 4px 20px; margin-top: 8px; color: var(--bleistift); font-size: 1.1rem; }
+.zahlen b { color: var(--tinte); font-variant-numeric: tabular-nums; }
+
+/* Einträge */
+.eintraege { display: flex; flex-direction: column; gap: 56px; }
+.eintrag { display: flex; flex-direction: column; gap: 10px; scroll-margin-top: 20px; }
+.eintrag:nth-child(even) { transform: rotate(-.4deg); }
+.kopfzeile { display: flex; flex-wrap: wrap; align-items: center; gap: 6px 14px; }
+.datum { color: var(--kuli); font-size: 1.05rem; }
+.ort {
+  border: 2px solid var(--tinte); border-radius: 50% 46% 52% 44%;
+  padding: 0 12px; font-size: 1rem; transform: rotate(-3deg); background: var(--papier);
+}
+.eintrag h2 { font-size: clamp(1.25rem, 4.5vw, 1.6rem); line-height: 1.4; text-wrap: balance; }
+.text p { margin: 0 0 .7em; max-width: 62ch; }
+.text p:last-child { margin-bottom: 0; }
+.text a { color: var(--kuli); }
+.text strong { background: var(--leuchtstift); font-weight: 400; padding: 0 3px; }
+.text ul { padding-left: 1.2em; margin: 0 0 .7em; }
+
+/* Fotos als eingeklebte Sofortbilder */
+.foto {
+  display: inline-block; margin: 14px 4px 18px; padding: 10px 10px 6px;
+  background: #fff; border: 2px solid var(--tinte); box-shadow: 4px 4px 0 var(--tinte);
+  max-width: min(100%, 440px); position: relative;
+}
+.foto:nth-of-type(odd) { transform: rotate(1.8deg); }
+.foto:nth-of-type(even) { transform: rotate(-1.6deg); }
+.foto::before { /* Klebeband */
+  content: ""; position: absolute; top: -12px; left: 50%; width: 90px; height: 24px;
+  transform: translateX(-50%) rotate(-4deg); background: rgba(255, 228, 92, .7);
+}
+.foto img { display: block; max-width: 100%; height: auto; }
+.foto figcaption { text-align: center; font-size: 1.05rem; padding-top: 6px; }
+
+.laune { align-self: flex-start; color: var(--bleistift); font-size: 1.1rem; }
+.laune b { color: var(--rot); font-weight: 400; }
+
+.leer {
+  border: 2px dashed var(--bleistift); border-radius: 12px; padding: 18px; color: var(--bleistift);
+}
+footer { text-align: center; color: var(--bleistift); font-size: 1.05rem; }
+a:focus-visible { outline: 3px solid var(--kuli); outline-offset: 2px; }
+@media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } }
+</style>
+</head>
+<body>
+<main class="heft">
+
+  <header>
+    <h1><span>{{ site.title }}</span></h1>
+    <p>{{ site.untertitel }}</p>
+  </header>
+
+  {%- assign reise = site.posts | reverse -%}
+  {%- assign mit_ort = reise | where_exp: "p", "p.lat" -%}
+
+  {% if mit_ort.size > 0 %}
+  <section class="karte-box" aria-label="Karte mit der Reiseroute">
+    <h2>Wo ich überall war</h2>
+    <div id="karte"></div>
+    <div class="zahlen">
+      <span><b id="km">0</b> km (Luftlinie)</span>
+      <span><b>{{ mit_ort.size }}</b> Orte</span>
+      <span><b>{{ site.posts.size }}</b> Einträge</span>
+    </div>
+  </section>
+  {% endif %}
+
+  {% if site.posts.size > 0 %}
+  <nav aria-label="Einträge">
+    <ul class="inhalt">
+      {% for post in reise %}
+      {%- assign mo = post.date | date: "%-m" | minus: 1 -%}
+      <li><a href="#{{ post.slug }}">{{ post.date | date: "%-d." }} {{ monate[mo] | slice: 0, 3 }}{% if post.ort %} · {{ post.ort }}{% endif %}</a></li>
+      {% endfor %}
+    </ul>
+  </nav>
+  {% endif %}
+
+  <section class="eintraege">
+    {% for post in site.posts %}
+    <article class="eintrag" id="{{ post.slug }}">
+      <div class="kopfzeile">
+        {%- assign wt = post.date | date: "%w" | plus: 0 -%}
+        {%- assign mo = post.date | date: "%-m" | minus: 1 -%}
+        <span class="datum">{{ tage[wt] }}, {{ post.date | date: "%-d." }} {{ monate[mo] }} {{ post.date | date: "%Y" }}</span>
+        {% if post.ort %}<span class="ort">{{ post.ort }}</span>{% endif %}
+      </div>
+      <h2>{{ post.title }}</h2>
+      <div class="text">{{ post.content }}</div>
+      {% if post.laune %}<span class="laune">Laune: <b>{{ post.laune }}</b></span>{% endif %}
+    </article>
+    {% else %}
+    <p class="leer">Hier steht noch nichts. Der erste Eintrag kommt bald!</p>
+    {% endfor %}
+  </section>
+
+  <footer>Ende. Fortsetzung folgt (wenn das WLAN geht).</footer>
+</main>
+
+{% if mit_ort.size > 0 %}
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+<script>
+  var orte = [
+    {% for p in mit_ort %}{ name: {{ p.ort | default: p.title | jsonify }}, lat: {{ p.lat }}, lon: {{ p.lon }}, id: {{ p.slug | jsonify }} }{% unless forloop.last %},{% endunless %}
+    {% endfor %}
+  ];
+  if (window.L && orte.length) {
+    var karte = L.map("karte", { scrollWheelZoom: false });
+    L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
+      maxZoom: 18,
+      attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>'
+    }).addTo(karte);
+    var punkte = orte.map(function (o) { return [o.lat, o.lon]; });
+    L.polyline(punkte, { color: "#d2453c", weight: 4, dashArray: "10 8", lineCap: "round" }).addTo(karte);
+    orte.forEach(function (o, i) {
+      L.circleMarker([o.lat, o.lon], { radius: 8, color: "#fbfcf7", weight: 2, fillColor: "#2856b8", fillOpacity: 1 })
+        .addTo(karte)
+        .bindTooltip(o.name, { permanent: true, direction: "top", offset: [0, -8], className: "ortsname" })
+        .on("click", function () { location.hash = o.id; });
+    });
+    if (punkte.length === 1) { karte.setView(punkte[0], 9); }
+    else { karte.fitBounds(punkte, { padding: [40, 40] }); }
+
+    // Kilometer zusammenzählen (Luftlinie)
+    var km = 0;
+    for (var i = 1; i < orte.length; i++) {
+      var a = orte[i - 1], b = orte[i], r = Math.PI / 180;
+      var d = Math.sin((b.lat - a.lat) * r / 2) ** 2 +
+              Math.cos(a.lat * r) * Math.cos(b.lat * r) * Math.sin((b.lon - a.lon) * r / 2) ** 2;
+      km += 12742 * Math.asin(Math.sqrt(d));
+    }
+    document.getElementById("km").textContent = Math.round(km).toLocaleString("de-CH");
+  }
+</script>
+{% endif %}
+
+<script>
+  // Fotos aus den Einträgen als eingeklebte Bilder darstellen.
+  // Der Text in den eckigen Klammern wird zur Bildunterschrift.
+  document.querySelectorAll(".text img").forEach(function (img) {
+    var fig = document.createElement("figure");
+    fig.className = "foto";
+    img.replaceWith(fig);
+    img.loading = "lazy";
+    fig.appendChild(img);
+    if (img.alt) {
+      var cap = document.createElement("figcaption");
+      cap.textContent = img.alt;
+      fig.appendChild(cap);
+    }
+  });
+</script>
+</body>
+</html>

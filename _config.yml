@@ -1,0 +1,15 @@
+# Grundeinstellungen fürs Reisetagebuch
+# Titel und Untertitel darfst du hier ändern.
+
+title: "Lenas Reisetagebuch"
+untertitel: "Sommerferien 2026. Achtung: Kann Spuren von Sonnenbrand enthalten."
+
+lang: de
+timezone: Europe/Zurich
+markdown: kramdown
+
+# Diese Dateien gehören nicht auf die Webseite
+exclude:
+  - README.md
+  - ANLEITUNG.md
+  - VORLAGE.md

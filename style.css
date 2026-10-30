@@ -41,13 +41,15 @@ body::before {
 }
 
 /* Kopf */
+header { display: flex; flex-direction: column; align-items: flex-start; gap: 22px; }
 header h1 {
   font-family: var(--titel); font-weight: 400;
-  font-size: clamp(1.8rem, 6.5vw, 2.8rem); line-height: 1.35;
-  margin: 0; transform: rotate(-1.5deg); text-wrap: balance;
+  font-size: clamp(1.6rem, 6vw, 2.8rem); line-height: 1.5;
+  margin: 0; max-width: 100%; transform: rotate(-1.5deg); text-wrap: balance;
 }
-header h1 span { background: var(--leuchtstift); padding: 0 8px; box-decoration-break: clone; -webkit-box-decoration-break: clone; }
-header p { margin: 12px 0 0; color: var(--bleistift); }
+/* gelber Leuchtstift-Balken: ein Block, der seinen Platz im Layout einnimmt */
+header h1 span { display: inline-block; max-width: 100%; background: var(--leuchtstift); padding: .2em .35em .05em; }
+header p { margin: 0; color: var(--bleistift); }
 
 /* Inhaltsverzeichnis */
 .inhalt { display: flex; flex-wrap: wrap; gap: 8px 10px; margin: 0; padding: 0; list-style: none; font-size: 1.1rem; }

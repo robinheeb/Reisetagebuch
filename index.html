@@ -64,7 +64,18 @@ layout: null
       </div>
       <h2>{{ post.title }}</h2>
       <div class="text">{{ post.content }}</div>
-      {% if post.laune %}<span class="laune">Laune: <b>{{ post.laune }}</b></span>{% endif %}
+      {%- if post.laune -%}
+        {%- comment -%} Erste Zahl herausholen: "3", "3 von 10" und "3/10" ergeben alle 3 {%- endcomment -%}
+        {%- assign sterne = post.laune | append: "" | strip | split: " " | first | split: "/" | first | plus: 0 -%}
+        {%- if sterne >= 1 and sterne <= 10 %}
+      <div class="laune" role="img" aria-label="Laune: {{ sterne }} von 10 Sternen">
+        <span class="laune-wort" aria-hidden="true">Laune:</span>
+        <span class="sterne" aria-hidden="true">{% for i in (1..10) %}<span class="stern{% if i <= sterne %} an{% endif %}">★</span>{% endfor %}</span>
+      </div>
+        {%- else %}
+      <span class="laune">Laune: <b>{{ post.laune }}</b></span>
+        {%- endif -%}
+      {%- endif %}
     </article>
     {% else %}
     <p class="leer">Hier steht noch nichts. Der erste Eintrag kommt bald!</p>
@@ -80,7 +91,7 @@ layout: null
   // Orte aus den Einträgen. "koordinaten" ist ein Wert wie "41.3874, 2.1686"
   // (direkt aus Google Maps kopiert). Ältere Einträge mit lat/lon gehen auch noch.
   var orte = [
-    {% for p in reise %}{% if p.koordinaten or p.lat %}{ name: {{ p.ort | default: p.title | jsonify }}, k: {{ p.koordinaten | jsonify }}, lat: {{ p.lat | jsonify }}, lon: {{ p.lon | jsonify }}, id: {{ p.slug | jsonify }} },
+    {% for p in reise %}{% if p.koordinaten or p.lat %}{ name: {{ p.ort | default: p.title | jsonify }}, k: {{ p.koordinaten | default: "" | jsonify }}, lat: {{ p.lat | default: "" | jsonify }}, lon: {{ p.lon | default: "" | jsonify }}, id: {{ p.slug | jsonify }} },
     {% endif %}{% endfor %}
   ].map(function (o) {
     if (o.k) {

@@ -9,6 +9,8 @@
   --kuli: #2856b8;
   --leuchtstift: #ffe45c;
   --rot: #d2453c;
+  --gold: #f5b800;
+  --stern-aus: #b4bcc6;
   --titel: "Rock Salt", "Comic Sans MS", cursive;
   --schrift: "Patrick Hand", "Comic Sans MS", "Chalkboard SE", cursive;
   color-scheme: light;
@@ -112,8 +114,12 @@ header p { margin: 0; color: var(--bleistift); }
 /* Fotografierte Tagebuchseiten: Dateiname enthält "seite" -> volle Breite */
 .foto:has(img[src*="seite"]) { display: block; max-width: 100%; margin: 14px 0 18px; transform: rotate(-.6deg); }
 
-.laune { align-self: flex-start; color: var(--bleistift); font-size: 1.1rem; }
+/* Laune als Sterne: goldene für die Punkte, graue für den Rest */
+.laune { align-self: flex-start; display: flex; flex-wrap: wrap; align-items: center; gap: 4px 10px; color: var(--bleistift); font-size: 1.1rem; }
 .laune b { color: var(--rot); font-weight: 400; }
+.sterne { display: inline-flex; gap: 1px; font-family: "Segoe UI Symbol", "Apple Symbols", "DejaVu Sans", sans-serif; font-size: 1.35rem; line-height: 1; }
+.stern { color: var(--stern-aus); }
+.stern.an { color: var(--gold); text-shadow: 0 0 1px var(--tinte), 1px 1px 0 var(--tinte); }
 
 .leer {
   border: 2px dashed var(--bleistift); border-radius: 12px; padding: 18px; color: var(--bleistift);

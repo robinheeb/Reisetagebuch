@@ -29,7 +29,7 @@ Der Teil zwischen den zwei `---` Linien sind die Infos zum Eintrag:
 | `title:` | Die Überschrift, in Anführungszeichen |
 | `ort:` | Wo du warst. Steht dann auf der Karte |
 | `koordinaten:` | Wo genau der Ort ist, zum Beispiel `41.3874, 2.1686` (siehe unten). Darfst du auch weglassen, dann kommt der Ort nicht auf die Karte |
-| `laune:` | Wie war der Tag? Zum Beispiel `8 von 10` |
+| `laune:` | Wie war der Tag? Eine Zahl von 1 bis 10, zum Beispiel `laune: 8`. Auf der Seite erscheinen dann 8 goldene und 2 graue Sterne |
 
 **Koordinaten finden:** In Google Maps mit der rechten Maustaste (am Handy: lange drücken) auf den Ort tippen. Oben erscheinen zwei Zahlen, zum Beispiel `41.3874, 2.1686`. Anklicken kopiert sie. Dann einfach hinter `koordinaten:` einfügen:
 
